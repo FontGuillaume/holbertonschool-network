@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Script to check if a TCP port is listening on localhost
+
+if [ $# -ne 1 ]; then
+  echo "Usage: 2-port_listening_on_localhost {PORT}"
+  exit 1
+fi
+
+PORT="$1"
+
+# Use netstat if available, otherwise fallback to ss
+if command -v netstat >/dev/null 2>&1; then
+  netstat -tln 2>/dev/null | grep -E "127\.0\.0\.1:$PORT(\s|$)" >/dev/null 2>&1
+  exit $?
+else
+  ss -tln 2>/dev/null | grep -E "127\.0\.0\.1:$PORT(\s|$)" >/dev/null 2>&1
+  exit $?
+fi
